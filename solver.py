@@ -3,14 +3,27 @@ import argparse
 import days
 import os
 import importlib
+import glob
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('day', metavar='day', type=int, help='specifies day to solve')
+maxDay = 0
+
+for day in glob.glob('./days/*'):
+    day = os.path.basename(os.path.normpath(day))
+    if day == '__init__.py' or day == '__pycache__':
+        continue
+    if int(day[1:]) > maxDay:
+        maxDay = int(day[1:])
+
+parser.add_argument('day', metavar='day', type=int, nargs='?', help='specifies day to solve')
 
 args = parser.parse_args()
 
-day = args.day
+if args.day is not None:
+    day = args.day
+else:
+    day = str(maxDay)
 
 day_dir = f'days/_{day}'
 
@@ -30,6 +43,8 @@ f = open(input_file)
 raw_data = f.read().rstrip()
 
 alias = importlib.import_module(day_dir.replace('/', '.'))
+
+print(f'Solving day {day}')
 
 if os.path.isfile(test_input_file):
     f_test_input_file = open(test_input_file)
