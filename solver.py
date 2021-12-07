@@ -17,6 +17,7 @@ for day in glob.glob('./days/*'):
         maxDay = int(day[1:])
 
 parser.add_argument('day', metavar='day', type=int, nargs='?', help='specifies day to solve')
+parser.add_argument('--ignore-actual', dest='ignoreActual', action='store_true', default=False, help='ignore actual')
 
 args = parser.parse_args()
 
@@ -54,4 +55,5 @@ if os.path.isfile(test_input_file):
     solved_p1, solved_p2 = alias.solve_p1(raw_test_input_data), alias.solve_p2(raw_test_input_data)
     print('Test input:', f'p1={solved_p1}', '==', ans_p1, str(solved_p1) == ans_p1, f'p2={solved_p2}', '==', ans_p2, str(solved_p2) == ans_p2)
 
-print('Actual output:', f'p1={alias.solve_p1(raw_data)}', f'p2={alias.solve_p2(raw_data)}')
+if not args.ignoreActual:
+    print('Actual output:', f'p1={alias.solve_p1(raw_data)}', f'p2={alias.solve_p2(raw_data)}')
