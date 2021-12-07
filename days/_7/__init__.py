@@ -3,31 +3,12 @@ import numpy as np
 import math
 
 def solve_p1(raw_data):
-    data = list(map(int, raw_data.strip().split(',')))
-
-    best_result = np.inf
-    for z in range(0, np.max(data)):
-        result = 0
-        for x in data:
-            result += abs(x - z)
-        if result < best_result:
-            best_result = result
-
-    return best_result
+    data = np.array(list(map(int, raw_data.strip().split(','))), dtype=np.int64)
+    return np.sum(np.abs(data - np.median(data)))
 
 def solve_p2(raw_data):
-    data = list(map(int, raw_data.strip().split(',')))
-
+    data = np.array(list(map(int, raw_data.strip().split(','))), dtype=np.int64)
     calcf = lambda n: int(n * (n + 1) / 2)
-
-    best_result = np.inf
-    for z in range(0, np.max(data)):
-        result = 0
-        for x in data:
-            result += calcf(abs(x - z))
-        if result < best_result:
-            best_result = result
-
-    return best_result
-
-    return np.sum(data)
+    mid = int(len(data)/2)
+    print(np.mean(data))
+    return np.sum(list(map(calcf, np.abs(data - np.mean(data)))))
