@@ -1,0 +1,478 @@
+from functools import reduce
+import numpy as np
+import math
+
+from numpy.lib.arraysetops import intersect1d
+from numpy.testing._private.utils import break_cycles
+
+def process_input(raw_data):
+    return list(map(lambda x: x.split(' | '), raw_data.strip().split('\n')))
+
+def solve_p1(raw_data):
+    data = process_input(raw_data)
+
+    numbers_segments = [[], [], [], [], [], [], [], [], [], []]
+
+    # segments_mapping = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'g': 5, 'f': 6}
+
+    segments_numbers = {
+        'a': [0, 2, 3, 5, 6, 7, 8, 9],
+        'b': [0, 4, 5, 6, 8, 9],
+        'c': [0, 1, 2, 3, 4, 7, 8, 9],
+        'd': [2, 3, 4, 5, 6, 8, 9],
+        'e': [0, 2, 6, 8],
+        'g': [0, 2, 3, 5, 6, 8, 9],
+        'f': [0, 1, 3, 4, 5, 6, 7, 8, 9]
+    }
+
+    for key, val in segments_numbers.items():
+        for d in val:
+            numbers_segments[d].append(key)
+
+    # print(numbers_segments)
+
+    digits = []
+
+    # mapping = {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'g': None, 'f': None}
+    mapping = {x:[] for x in range(0, 10)}
+
+    for segments in data:
+        for segment in segments[1].split(' '):
+            for i in range(len(numbers_segments)):
+                result = []
+                for char in segment:
+                    result.append(char)
+                if len(segment) == len(numbers_segments[i]):
+                    if len(mapping[i]) == 0:
+                        mapping[i] = result
+                    else:
+                        mapping[i] = np.intersect1d(mapping[i], result)
+            # print(segment)
+            # print(mapping)
+        
+        inverse_mapping = {}
+        
+        for dig, vals in mapping.items():
+            for char in vals:
+                if char not in inverse_mapping:
+                    inverse_mapping[char] = []
+                inverse_mapping[char].append(dig)
+
+        # for segment in segments[1].split(' '):
+        #     result = []
+        #     for char in segment:
+        #         if char not in inverse_mapping:
+        #             break
+        #         if len(result) == 0:
+        #             result = inverse_mapping[char]
+        #         else:
+        #             result = np.intersect1d(result, inverse_mapping[char])
+        #     print(segment)
+        #     print(result)
+        #     for d in result:
+        #         digits.append(d)
+
+    # for segments in data:
+        # for segment in segments[1].split(' '):
+            # for ns  numbers_segments
+            # for 
+            # for char in segment:
+                # 
+                # if segment == 'gcbe':
+                #     print(char)
+                #     print(result)
+                # if len(result) == 0:
+                #     result = segments_numbers[char]
+                # else:
+                #     result = np.intersect1d(result, segments_numbers[char])
+            # print(segment)
+            # print(result)
+            # for d in result:
+            #     digits.append(d)
+
+    result = 0
+
+    for i in digits:
+        if i == 1:
+            result += 1
+        elif i == 4:
+            result += 1
+        elif i == 7:
+            result += 1
+        elif i == 8:
+            result += 1
+    return result
+
+def solve_p2(raw_data):
+    data = process_input(raw_data)
+
+    numbers_segments = [[], [], [], [], [], [], [], [], [], []]
+
+    # segments_mapping = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'g': 5, 'f': 6}
+
+    segments_numbers = {
+        'a': [0, 2, 3, 5, 6, 7, 8, 9],
+        'b': [0, 4, 5, 6, 8, 9],
+        'c': [0, 1, 2, 3, 4, 7, 8, 9],
+        'd': [2, 3, 4, 5, 6, 8, 9],
+        'e': [0, 2, 6, 8],
+        'g': [0, 2, 3, 5, 6, 8, 9],
+        'f': [0, 1, 3, 4, 5, 6, 7, 8, 9]
+    }
+
+    for key, val in segments_numbers.items():
+        for d in val:
+            numbers_segments[d].append(key)
+
+    digits = []
+
+    all_chars = ['a', 'b', 'c', 'd', 'e', 'g', 'f']
+
+    # mapping = {'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'g': None, 'f': None}
+    mapping = {x:[] for x in range(0, 10)}
+    mapping_char = {x: [] for x in all_chars}
+    original_mapping_char = {x: None for x in all_chars}
+
+    for segments in data:
+        segments_to_process = []
+        for segment in segments[0].split(' '):
+            result = []
+            for char in segment:
+                result.append(char)
+
+            if len(segment) == len(numbers_segments[1]):
+                mapping[1] = result
+                for char in segment:
+                    mapping_char[char].append(1)
+                continue
+            if len(segment) == len(numbers_segments[4]):
+                mapping[4] = result
+                for char in segment:
+                    mapping_char[char].append(4)
+                continue
+            if len(segment) == len(numbers_segments[7]):
+                mapping[7] = result
+                for char in segment:
+                    mapping_char[char].append(7)
+                continue
+            if len(segment) == len(numbers_segments[8]):
+                mapping[8] = result
+                for char in segment:
+                    mapping_char[char].append(8)
+                continue
+            segments_to_process.append(segment)
+        
+        candidates = dict(mapping_char)
+        print(mapping[7], mapping[1])
+        a = np.setdiff1d(mapping[7], mapping[1])
+        print('a', a)
+
+        original_mapping_char['a'] = a[0]
+        eg = np.setdiff1d(mapping[8], mapping[4] + [original_mapping_char['a']])
+        print('eg', eg)
+        mapping[0] = np.concatenate((mapping[0], a))
+        mapping[2] = np.concatenate((mapping[2], a))
+        mapping[3] = np.concatenate((mapping[3], a))
+        mapping[5] = np.concatenate((mapping[5], a))
+        mapping[6] = np.concatenate((mapping[6], a))
+        mapping[9] = np.concatenate((mapping[9], a))
+
+        mapping[0] = np.concatenate((mapping[0], eg))
+        mapping[2] = np.concatenate((mapping[2], eg))
+        mapping[6] = np.concatenate((mapping[6], eg))
+        # for i in eg:
+        #     for j in [0, 2, 6]:
+        #         if i not in mapping[j]:
+        #             mapping[j].append(i)
+
+        mapping[0] = np.concatenate((mapping[0], mapping[7]))
+        mapping[3] = np.concatenate((mapping[3], mapping[7]))
+        mapping[9] = np.concatenate((mapping[9], mapping[7]))
+        
+        bd = np.setdiff1d([*mapping[4], *eg, *a], mapping[0])
+        mapping[5] = np.concatenate((mapping[5], bd))
+        mapping[6] = np.concatenate((mapping[6], bd))
+        mapping[9] = np.concatenate((mapping[9], bd))
+        
+        print('bd', bd)
+        cf = np.setdiff1d(mapping[4], bd)
+        mapping[0] = np.concatenate((mapping[0], cf))
+        mapping[3] = np.concatenate((mapping[3], cf))
+        mapping[9] = np.concatenate((mapping[9], cf))
+
+        # bedg = np.setdiff1d(mapping[8], [*mapping[7]])
+        # eg = np.setdiff1d([*bedg, *mapping[4]], [*mapping[4], *a])
+        # print('bedg', bedg)
+        # print('eg', eg)
+
+        # mapping[0] = np.concatenate((mapping[0], eg))
+        # mapping[2] = np.concatenate((mapping[2], eg))
+        # mapping[6] = np.concatenate((mapping[6], eg))
+
+        print(mapping[8], [*mapping[0], *bd])
+        g = np.setdiff1d(mapping[8], [*mapping[0], *bd])
+        print(g)
+
+        '''
+        e, f, g
+        '''
+        b_candidates = bd
+        print('b_candidates', b_candidates)
+
+        e_candidates = eg
+
+        # b = ['e']
+        # d = ['f']
+        # e = ['g']
+        # g = ['c']
+        # c = ['a']
+        # f = ['b']
+        b = [bd[1]]
+        d = [bd[0]]
+        e = [eg[1]]
+        g = [eg[0]]
+        c = [cf[0]]
+        f = [cf[1]]
+        # (b, d) = bd
+        # (e, g) = eg
+
+        mapping[0] = np.concatenate((mapping[0], b))
+
+        mapping[2] = np.concatenate((mapping[2], c))
+
+        mapping[5] = np.concatenate((mapping[5], f))
+        mapping[6] = np.concatenate((mapping[6], f))
+            
+        mapping[2] = np.concatenate((mapping[2], d))
+        mapping[3] = np.concatenate((mapping[3], d))
+
+        mapping[3] = np.concatenate((mapping[3], g))
+        mapping[5] = np.concatenate((mapping[5], g))
+        mapping[9] = np.concatenate((mapping[9], g))
+
+        mapping[2] = np.concatenate((mapping[2], e))
+
+        for i in range(len(mapping)):
+            mapping[i] = np.unique(mapping[i])
+        
+        # for i in range(0, 1):
+        #     (b, d) = np.roll(b_candidates, i)
+
+        #     mapping_test = dict(mapping)
+        #     mapping_test[0] = np.concatenate((mapping_test[0], b))
+            
+        #     mapping_test[2] = np.concatenate((mapping_test[2], d))
+        #     mapping_test[3] = np.concatenate((mapping_test[3], d))
+
+        #     for j in range(0, 1):
+        #         (e, g) = np.roll(b_candidates, j)
+
+        #         mapping_test[3] = np.concatenate((mapping_test[3], g))
+        #         mapping_test[5] = np.concatenate((mapping_test[5], g))
+        #         mapping_test[9] = np.concatenate((mapping_test[9], g))
+
+        #         mapping_test[2] = np.concatenate((mapping_test[2], e))
+
+        # for i in b_candidates:
+
+
+
+        # print(np.intersect1d(mapping[0], mapping[4]))
+        # np.append(mapping[0], np.intersect1d(mapping[0], mapping[4])[0])
+        print(mapping)
+        # return
+        
+        inverse_mapping = {}
+
+        f = None
+
+        for i in range(len(mapping)):
+            for j in range(len(mapping[i])):
+                if mapping[i][j] not in inverse_mapping:
+                    inverse_mapping[mapping[i][j]] = []
+                inverse_mapping[mapping[i][j]].append(i)
+
+        dig_to_symbol = {}
+        
+        digits = []
+        break_condition = False
+
+        for segment in segments_to_process:
+            result = []
+            for char in segment:
+                if len(result) == 0:
+                    result = inverse_mapping[char]
+                else:
+                    print(char, result)
+                    result = np.intersect1d(result, inverse_mapping[char])
+            
+            if len(result) > 1:
+                for i in result:
+                    if i != 8:
+                        print(segment, i)
+            else:
+                print(segment, result)
+
+        if break_condition:
+            break
+        # print(inverse_mapping)
+        # for i, numbers in inverse_mapping.items():
+        #     best_candidate = []
+        #     sol = None
+        #     for segment, numbers2 in segments_numbers.items():
+        #         intersection = np.intersect1d(numbers, numbers2)
+        #         if len(intersection) > len(best_candidate):
+        #             best_candidate = intersection
+        #             sol = segment
+
+        #     if i == 'f':
+        #         f = sol
+        
+
+        # for segment in segments_to_process:
+        #     # chars = []
+        #     # for char in segment:
+        #     #     if original_mapping_char[char] is not None:
+        #     #         candidates[char] = segments_numbers[original_mapping_char[char]]
+        #     #     chars.append(char)
+
+        #     for i in range(len(numbers_segments)):
+        #         if len(mapping[i]) != len(numbers_segments[i]):
+        #             print(i)
+        #             continue
+                    
+        #         # for char in segment:
+        #         #     if i not in candidates[char]:
+        #         #         candidates[char].append(i)
+        #     #     result = np.setdiff1d(result, candidates[char])
+        #     # print(segment)
+        #     # print(result)
+
+        #     # result = []
+        #     # for i, symbols in numbers_segments.items():
+        #     #     for j, other_symbols in numbers_segments.items():
+        #     #         diff = np.setdiff1d(symbols, other_symbols)
+            
+        #     if original_mapping_char['c']:
+        #         candidates[original_mapping_char['c']] = np.intersect1d(mapping[0], mapping[1])
+        #     if original_mapping_char['f']:
+        #         candidates[original_mapping_char['f']] = np.intersect1d(mapping[0], mapping[1])
+
+        # print(mapping)
+        # print(original_mapping_char)
+        # print(candidates)
+        # return
+        # print(candidates)
+        # for segment in segments[0].split(' '):
+        #     result = []
+        #     for char in segment:
+        #         result.append(char)
+
+        #     for i in range(10):
+        #         if i == 4 or i == 1 or i == 7 or i == 8:
+        #             pass
+        #         else:
+        #             for char in segment:
+        #                 if i not in candidates[char]:
+        #                     candidates[char].append(i)
+        
+        print(candidates)
+        return
+
+        # for dig in range(len(numbers_segments)):
+            # segments = numbers_segments[i]
+
+        # for i in [1, 4, 7, 8]:
+        # original_mapping_char['a'] = np.setdiff1d(mapping[7], mapping[1])[0]
+        # print(np.setdiff1d(mapping[8], mapping[4] + [original_mapping_char['a']]))
+        # return
+        # original_mapping_char['g'] = np.setdiff1d(mapping[8], mapping[7])
+
+        for segment in segments[0].split(' '):
+            result = []
+
+            for char in all_chars:
+                if len(result) == 0:
+                    result = mapping_char[char]
+                else:
+                    result = np.intersect1d(result, mapping_char[char])
+            print(segment)
+            print(result)
+            # for i in range(len(numbers_segments)):
+            #     result = []
+            #     for char in segment:
+            #         result.append(char)
+            #         if len(mapping[i]) == 0:
+            #             mapping[i] = result
+            #             for char in segment:
+            #                 mapping_char[char] = result
+            #         else:
+            #             for char in segment:
+            #                 mapping_char[char] = np.intersect1d(mapping_char[char], result)
+            #         if i == 0:
+            #             print(result)
+            #             print(mapping[i])
+            #     else:
+            #         print(segment)
+            #         print(result)
+            #         for char in segment:
+            #             mapping_char[char] = np.intersect1d(mapping_char[char], result)
+
+        
+        # for segment in segments[0].split(' '):
+        #     for i in range(len(numbers_segments)):
+        #         for j in range(i, len(numbers_segments)):
+        #             intersection = intersect1d(mapping[i], mapping[j])
+        #             if len(intersection) != len(mapping[i]):
+
+        #     for char in segment:
+        #         if len(segment) == len(numbers_segments[i]):
+
+        #     # print(segment)
+        #     # print(mapping)
+        
+        inverse_mapping = {}
+        
+        for dig, vals in mapping.items():
+            for char in vals:
+                if char not in inverse_mapping:
+                    inverse_mapping[char] = []
+                inverse_mapping[char].append(dig)
+        
+        # print(mapping)
+        # print(inverse_mapping)
+
+        for segment in segments[1].split(' '):
+            result = []
+            for char in segment:
+                if char not in inverse_mapping:
+                    break
+                if len(result) == 0:
+                    result = inverse_mapping[char]
+                else:
+                    result = np.intersect1d(result, inverse_mapping[char])
+            # print(segment)
+            # print(result)
+            for d in result:
+                digits.append(d)
+    print(mapping)
+    print(mapping_char)
+    # for segments in data:
+        # for segment in segments[1].split(' '):
+            # for ns  numbers_segments
+            # for 
+            # for char in segment:
+                # 
+                # if segment == 'gcbe':
+                #     print(char)
+                #     print(result)
+                # if len(result) == 0:
+                #     result = segments_numbers[char]
+                # else:
+                #     result = np.intersect1d(result, segments_numbers[char])
+            # print(segment)
+            # print(result)
+            # for d in result:
+            #     digits.append(d)
+
+    return digits
