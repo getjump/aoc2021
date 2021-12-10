@@ -5,6 +5,7 @@ from itertools import permutations
 import copy
 from collections import deque
 from scipy.ndimage import convolve
+from scipy import ndimage
 
 from numpy.lib.arraysetops import intersect1d
 
@@ -58,6 +59,11 @@ def solve_p1(raw_data):
 
 def solve_p2(raw_data):
     original_data = process_input(raw_data)
+    # lowpass = ndimage.gaussian_filter(np.array(original_data) - 9, 3)
+    # print(lowpass)
+    # print(original_data)
+    # print(original_data - lowpass)
+    # return
 
     nx, ny = len(original_data[0]), len(original_data)
 
@@ -167,5 +173,5 @@ def solve_p2(raw_data):
 
     sort = np.sort(np.array(basins).flatten())
     print(sort)
-    print(sort[-1], sort[-2], sort[-3])
+    print(sort[-1], sort[-2], sort[-3]) 
     return sort[-1] * sort[-2] * sort[-3]
