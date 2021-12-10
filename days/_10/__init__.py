@@ -70,8 +70,6 @@ def solve_p1(raw_data):
     data = process_input(raw_data)
     result = 0
 
-    corrupted = ['(]', '{()()()>', '(((()))}', '<([]){()}[{}])']
-
     for line in data:
         # print(line)
         result += parse_line(line)
