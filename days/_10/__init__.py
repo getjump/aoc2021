@@ -55,13 +55,13 @@ def complete_line(line):
 
     result = ''
 
-    print(parsed)
+    # print(parsed)
 
     while parsed:
         points *= 5
         p = parsed.pop()
         result = p + result + symbols[p]
-        print(symbols[p], lookup_points[symbols[p]], points)
+        # print(symbols[p], lookup_points[symbols[p]], points)
         points += lookup_points[symbols[p]]
 
     return points
@@ -87,4 +87,4 @@ def solve_p2(raw_data):
             incomplete_lines.append(line)
             result.append(complete_line(line))
 
-    return np.median(sorted(result, reverse=True))
+    return int(np.median(sorted(result, reverse=True)))

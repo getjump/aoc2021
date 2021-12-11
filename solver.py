@@ -47,13 +47,18 @@ alias = importlib.import_module(day_dir.replace('/', '.'))
 
 print(f'Solving day {day}')
 
-if os.path.isfile(test_input_file):
-    f_test_input_file = open(test_input_file)
+i = 0
+for test in glob.glob(f'{day_dir}\*'):
+    if 'test_input' not in test:
+        continue
+    
+    f_test_input_file = open(test)
     ans_p1, ans_p2 = map(str.strip, f_test_input_file.readline().strip().split(','))
     raw_test_input_data = f_test_input_file.read()
 
     solved_p1, solved_p2 = alias.solve_p1(raw_test_input_data), alias.solve_p2(raw_test_input_data)
-    print('Test input:', f'p1={solved_p1}', '==', ans_p1, str(solved_p1) == ans_p1, f'p2={solved_p2}', '==', ans_p2, str(solved_p2) == ans_p2)
+    print(f'Test input {os.path.basename(test)}:', f'p1={solved_p1}', '==', ans_p1, str(solved_p1) == ans_p1, f'p2={solved_p2}', '==', ans_p2, str(solved_p2) == ans_p2)
+    i += 1
 
 if not args.ignoreActual:
     print('Actual output:', f'p1={alias.solve_p1(raw_data)}', f'p2={alias.solve_p2(raw_data)}')
