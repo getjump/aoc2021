@@ -48,7 +48,7 @@ alias = importlib.import_module(day_dir.replace('/', '.'))
 print(f'Solving day {day}')
 
 i = 0
-for test in glob.glob(f'{day_dir}\*'):
+for test in glob.glob(f'{day_dir}/*'):
     if 'test_input' not in test:
         continue
     

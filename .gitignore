@@ -138,3 +138,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 days/_9/Без названия.ipynb
+days/_11/animation.mp4
+.gitignore
+days/_11/visualization.ipynb
