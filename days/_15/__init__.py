@@ -20,7 +20,6 @@ def solve_p1(raw_data):
     data = process_input(raw_data)
 
     risk_levels = []
-    return
 
     def bf(src):
         dist = {y: {x: np.inf for x in range(len(data[0]))} for y in range(len(data))}
