@@ -29,7 +29,7 @@ def parse_packet(packet_data, nl=0):
     sep = '    ' * nl
 
     # print(sep, packet_data)
-    print(sep, 'version', bin2dec(version), 'typeId', bin2dec(typeId))
+    # print(sep, 'version', bin2dec(version), 'typeId', bin2dec(typeId))
 
     version_sum = int(bin2dec(version))
 
@@ -47,7 +47,7 @@ def parse_packet(packet_data, nl=0):
         # print('lentypeid', lengthTypeId)
         if lengthTypeId == '0':
             totalLengthSubp = bin2dec(packet_data[7:22])
-            print(sep, totalLengthSubp, 'length subp', packet_data[7:22])
+            # print(sep, totalLengthSubp, 'length subp', packet_data[7:22])
             length += totalLengthSubp + 15
             start = 22
             while start < 22 + totalLengthSubp:
@@ -60,20 +60,20 @@ def parse_packet(packet_data, nl=0):
                 start += l
                 # if l == 0:
                     # break
-                print('' * nl + 'start', 'l', start, l)
+                # print('' * nl + 'start', 'l', start, l)
                 # break
                 # if start > 33:
                     # break
         elif lengthTypeId == '1':
             numberOfSubp = bin2dec(packet_data[7:18])
-            print(sep, 'num_subp', numberOfSubp, packet_data[7:18])
+            # print(sep, 'num_subp', numberOfSubp, packet_data[7:18])
             length += 11
             start = 18
             while numberOfSubp > 0:
                 packet_length, v, d = parse_packet(packet_data[start:], nl+1)
                 if d is not None:
                     OPERANDS.append(d)
-                print(sep, packet_data[start:], packet_length)
+                # print(sep, packet_data[start:], packet_length)
                 version_sum += int(v)
                 # print(packet_length, 'subp lenth')
                 length += packet_length
@@ -91,30 +91,19 @@ def parse_packet(packet_data, nl=0):
             start += 5
             length += 5
         chunks.append(packet_data[start+1:start+5])
-        print(sep, ''.join(chunks))
-        print(sep, 'decimal', bin2dec(''.join(chunks)))
+        # print(sep, ''.join(chunks))
+        # print(sep, 'decimal', bin2dec(''.join(chunks)))
         decimal = bin2dec(''.join(chunks))
         length += 5
         # nested packages
-
-    first_bits = packet_data[6:11]
-    mid_bits = packet_data[11:16]
-    end_bits = packet_data[16:21]
-    extra = packet_data[21:]
-
-    # print(version, typeId, first_bits, mid_bits, end_bits)
-    # print((first_bits + mid_bits + end_bits)[::-1])
-    # decimal = int((first_bits + mid_bits + end_bits)[::-1], 2)
-    # print(decimal)
-    print(sep, 'version_sum', version_sum)
+    # print(sep, 'version_sum', version_sum)
 
     return length, version_sum, decimal
 
 def solve_p1(raw_data):    
     data = process_input(raw_data)
-    print('len', parse_packet(data))
-    print(data)
-    return len(data)
+    _, sum, _ = parse_packet(data)
+    return sum
 
 def solve_p2(raw_data):
     data = process_input(raw_data)
